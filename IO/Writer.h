@@ -34,6 +34,7 @@ public:
 	NetworkWriter() = delete;
 	NetworkWriter(std::shared_ptr<simplenet::SimpleNetMT::Connection> a_connection);
 	NetworkWriter(const NetworkWriter& a_other) = delete;
+	NetworkWriter(NetworkWriter&& a_other) noexcept;
 	NetworkWriter operator=(const NetworkWriter& a_other) = delete;
 	virtual ~NetworkWriter() = default;
 

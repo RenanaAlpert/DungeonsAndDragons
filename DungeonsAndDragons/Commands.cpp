@@ -7,6 +7,7 @@ namespace experis
 void Left::Do(Player& a_player, Writer& a_os) const 
 {
 	a_player.Left();
+	a_player.Drow(a_os);
 	std::stringstream message;
 	message << "You are facing " << experis::DIRACTIONS.at(a_player.GetDiraction()) << std::endl;
 	a_os.Write(message.str());
@@ -15,6 +16,7 @@ void Left::Do(Player& a_player, Writer& a_os) const
 void Right::Do(Player& a_player, Writer& a_os) const 
 {
 	a_player.Right();
+	a_player.Drow(a_os);
 	std::stringstream message;
 	message << "You are facing " << experis::DIRACTIONS.at(a_player.GetDiraction()) << std::endl;
 	a_os.Write(message.str());
@@ -34,7 +36,8 @@ void Walk::Do(Player& a_player, Writer& a_os) const
 {
 	if(a_player.Walk())
 	{
-		a_os.Write("chenge roon complite\n");
+		a_player.Drow(a_os);
+		a_os.Write("chenge room complite\n");
 	}
 	else
 	{

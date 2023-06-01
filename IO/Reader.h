@@ -34,6 +34,7 @@ public:
 	NetworkReader() = delete;
 	NetworkReader(std::shared_ptr<simplenet::SimpleNetMT::Connection> a_connection);
 	NetworkReader(const NetworkReader& a_other) = delete;
+	NetworkReader(NetworkReader&& a_other) noexcept;
 	NetworkReader operator=(const NetworkReader& a_other) = delete;
 	virtual ~NetworkReader() = default;
 

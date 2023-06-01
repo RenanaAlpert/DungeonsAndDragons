@@ -21,6 +21,11 @@ NetworkReader::NetworkReader(std::shared_ptr<simplenet::SimpleNetMT::Connection>
 {
 }
 
+NetworkReader::NetworkReader(NetworkReader&& a_other) noexcept
+	: m_connection{a_other.m_connection}
+{
+}
+
 std::string NetworkReader::ReadLine()
 {
 	return this->m_connection.get()->ReadLine();

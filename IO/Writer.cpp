@@ -19,6 +19,11 @@ NetworkWriter::NetworkWriter(std::shared_ptr<simplenet::SimpleNetMT::Connection>
 {
 }
 
+NetworkWriter::NetworkWriter(NetworkWriter&& a_other) noexcept
+	:m_connection{a_other.m_connection}
+{
+}
+
 void NetworkWriter::Write(const std::string& a_text)
 {
 	this->m_connection.get()->Write(a_text);
