@@ -143,15 +143,19 @@
   <ItemGroup>
     <ClCompile Include="Commands.cpp" />
     <ClCompile Include="InputParser.cpp" />
+    <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="Subject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diraction.h" />
     <ClInclude Include="InputParser.h" />
+    <ClInclude Include="Observer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="Subject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

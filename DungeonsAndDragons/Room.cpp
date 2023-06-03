@@ -8,13 +8,17 @@
 namespace experis
 {
 
+static int countRooms = 0;
+
 Room::Room()
-	: m_nextRooms{std::nullopt, std::nullopt, std::nullopt, std::nullopt}, m_paintRoom{LoadPainting("room.txt")}
+	: m_numRoom{countRooms++}, m_nextRooms{std::nullopt, std::nullopt, std::nullopt, std::nullopt}
+	, m_paintRoom{LoadPainting("room.txt")}
 {
 }
 
 Room::Room(Room&& a_other) noexcept
-	: m_nextRooms{a_other.m_nextRooms.at(0), a_other.m_nextRooms.at(1), a_other.m_nextRooms.at(2), a_other.m_nextRooms.at(3)}
+	: m_numRoom{a_other.m_numRoom}
+	, m_nextRooms{a_other.m_nextRooms.at(0), a_other.m_nextRooms.at(1), a_other.m_nextRooms.at(2), a_other.m_nextRooms.at(3)}
 	, m_paintRoom{a_other.m_paintRoom}
 {
 }
@@ -25,6 +29,10 @@ Room& Room::operator=(Room&& a_other) noexcept
 	{
 		std::swap(this->m_nextRooms.at(idx), a_other.m_nextRooms.at(idx));
 	}
+	std::swap(this->m_numRoom, a_other.m_numRoom);
+	Group oldGroup = this->m_paintRoom;
+	/*this->m_paintRoom = a_other.m_paintRoom;
+	a_other.m_paintRoom = this->m_paintRoom;*/
 	return *this;
 }
 
@@ -62,6 +70,11 @@ void Room::Drow(ascii::ColoredCanvas& a_canvas, Writer& a_os) const
 	std::stringstream paint{};
    /* a_canvas.Print(paint, ascii::ColoredCanvas::OutputPosition::CURRENT_LINE);
 	a_os.Write(paint.str());*/
+}
+
+int Room::GetMumber() const
+{
+	return this->m_numRoom;
 }
 
 } // experis

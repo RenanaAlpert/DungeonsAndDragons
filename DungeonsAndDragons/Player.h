@@ -2,6 +2,7 @@
 #include "Diraction.h"
 #include "Room.h"
 #include "Line.h"
+#include "Observer.h"
 
 namespace experis
 {
@@ -10,7 +11,7 @@ class Player
 {
 	using Diractions = detail::EnumDiractions;
 public:
-	Player(std::shared_ptr<Room> a_startRoom, const std::string& a_name);
+	Player(std::shared_ptr<Room> a_startRoom, const std::string& a_name, std::shared_ptr<Writer> a_writer);
 	Player(const Player& a_other) = delete;
 	Player(Player&& a_other) = delete;
 	Player operator=(const Player& a_other) = delete;
@@ -22,6 +23,7 @@ public:
 	bool Walk();
 	Diractions GetDiraction() const;
 	std::shared_ptr<Room> GetRoom() const;
+	const std::string& GetName() const;
 	void Drow(Writer& a_os) const;
 
 private:
@@ -29,6 +31,7 @@ private:
 	Diractions m_diraction;
 	std::string m_name;
 	Line m_paint;
+	PlayerObserver m_observer;
 };
 
 } // experis

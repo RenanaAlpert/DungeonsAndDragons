@@ -5,15 +5,21 @@
 #include "Writer.h"
 #include <sstream>
 #include <thread>
+#include "Subject.h"
 
-void Play(std::shared_ptr<experis::Room> a_startRoom, std::unique_ptr<experis::Writer> a_out, std::unique_ptr<experis::Reader> a_in)
+namespace experis
+{
+
+RoomsMap roomsMap{};
+
+void Play(std::shared_ptr<experis::Room> a_startRoom, std::shared_ptr<experis::Writer> a_out, std::unique_ptr<experis::Reader> a_in)
 {
 	std::string prompter = ">";
 	std::stringstream ss{};
 	ss << "welcom to the game :) enter your name" << std::endl;
 	a_out->Write(ss.str());
 	std::string name = a_in->ReadLine();
-	experis::Player player{a_startRoom, name};
+	experis::Player player{a_startRoom, name, a_out};
 	player.Drow(*a_out);
 	ss = {};
 	ss << "Welcome " << name << " :) you can start play ;)" << std::endl;
@@ -49,7 +55,7 @@ void NetworkPlay(unsigned short a_port, std::shared_ptr<experis::Room> a_startRo
 			{
 				//TODO treat memory leake
 				new std::jthread{&Play, a_startRoom
-					, std::make_unique<experis::NetworkWriter>(c), std::make_unique<experis::NetworkReader>(c)};
+					, std::make_shared<experis::NetworkWriter>(c), std::make_unique<experis::NetworkReader>(c)};
 				//Play(a_startRoom, out, in);
 			}
 		}
@@ -65,6 +71,8 @@ void ConsolePlay(std::shared_ptr<experis::Room> a_startRoom)
 	Play(a_startRoom, std::make_unique<experis::OstreamWriter>(std::cout), std::make_unique<experis::IstreamReader>(std::cin));
 }
 
+} // experis
+
 int main(int argc, char* argv[])
 {
 	std::shared_ptr<experis::Room> startRoom = std::make_shared<experis::Room>();
@@ -74,7 +82,7 @@ int main(int argc, char* argv[])
 	std::vector<std::thread> players;
 	if(argc == 1)
 	{
-		players.push_back(std::thread{&ConsolePlay, startRoom});
+		players.push_back(std::thread{&experis::ConsolePlay, startRoom});
 	}
 	else
 	{
@@ -84,11 +92,11 @@ int main(int argc, char* argv[])
 			int port = experis::ParsePlatform(untrust_inputPlatrorm);
 			if(port < 0)
 			{
-				players.push_back(std::thread{&ConsolePlay, startRoom});
+				players.push_back(std::thread{&experis::ConsolePlay, startRoom});
 			}
 			else
 			{
-				players.push_back(std::thread{&NetworkPlay, port, startRoom});
+				players.push_back(std::thread{&experis::NetworkPlay, port, startRoom});
 			}
 		}
 	}

@@ -1,18 +1,23 @@
 #include "Player.h"
+#include "Subject.h"
 #include <array>
 #include <sstream>
 
 namespace experis
 {
 
+extern RoomsMap roomsMap;
+
 static constexpr int MOVE = 1;
 static constexpr std::array<char, 4> BRASH_PLAYER = {'^', '>', 'v', '<'};
 
-Player::Player(std::shared_ptr<Room> a_startRoom, const std::string& a_name)
-	: m_diraction{Diractions::NORTH}, m_currentRoom{a_startRoom}, m_name{a_name}, m_paint{BRASH_PLAYER.at(m_diraction), 8, 5, 8, 5}
+Player::Player(std::shared_ptr<Room> a_startRoom, const std::string& a_name, std::shared_ptr<Writer> a_writer)
+	: m_diraction{Diractions::NORTH}, m_currentRoom{a_startRoom}, m_name{a_name}
+	, m_paint{BRASH_PLAYER.at(m_diraction), 8, 5, 8, 5}, m_observer{*this, a_writer}
 {
 	m_paint.SetBg(Shape::Color::TERMINAL_COLOR);
 	m_paint.SetFg(Shape::Color::MAGENTA);
+	roomsMap.Regisrer(this->m_observer);
 }
 
 Player::~Player()
@@ -38,7 +43,9 @@ bool Player::Walk()
 	if(this->m_currentRoom.get()->ThereIsDoor(this->m_diraction))
 	{
 		//Room& r = const_cast<Room&>(this->m_currentRoom.ThroughTheDoor(this->m_diraction));
+		roomsMap.Unregister(this->m_observer);
 		this->m_currentRoom = this->m_currentRoom.get()->ThroughTheDoor(this->m_diraction);
+		roomsMap.Regisrer(this->m_observer);
 		return true;
 	}
 	else
@@ -55,6 +62,11 @@ Player::Diractions Player::GetDiraction() const
 std::shared_ptr<Room> Player::GetRoom() const
 {
 	return this->m_currentRoom;
+}
+
+const std::string& Player::GetName() const
+{
+	return this->m_name;
 }
 
 void Player::Drow(Writer& a_os) const
